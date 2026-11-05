@@ -1,0 +1,23 @@
+<div class="card bg-base-200 border border-base-300 shadow-md hover:shadow-xl hover:border-secondary/40 transition-all duration-300 group overflow-hidden h-full flex flex-col animate-fadeIn">
+  <figure class="relative aspect-square overflow-hidden bg-base-300">
+    <img
+      [src]="product().images | productImage"
+      [alt]="product().title"
+      class="w-full h-full object-cover object-center group-hover:scale-150 transition-transform duration-500 ease-out"
+      />
+  </figure>
+  <div class="card-body p-4 flex flex-col justify-between grow">
+    <h3 class="card-title text-base font-bold text-base-content hover:text-secondary cursor-pointer transition-colors line-clamp-1"
+    [routerLink]="['/product',product().slug]">{{product().title}}</h3>
+    <p class="text-xs text-base-content/70 mt-1 line-clamp-2 min-h-8">
+        {{ product().description }}
+      </p>
+    <div class="pt-3 mt-2 border-t border-base-300/60 flex items-center justify-between">
+      <div class="flex flex-col">
+        <span class="text-[12px] uppercase font-semibold text-base-content/50 tracking-wider">Price: </span>
+        <span class="text-lg font-extrabold text-secondary">{{product().price | currency:'USD':'symbol':'1.2-2'}}</span>
+      </div>
+     <a [routerLink]="['/product',product().slug]" class="btn btn-secondary btn-sm text-white font-medium shadow-sm hover:scale-105 transition-transform">View</a>
+    </div>
+  </div>
+</div>

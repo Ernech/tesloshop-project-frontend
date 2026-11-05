@@ -1,0 +1,102 @@
+<div class="navbar bg-base-500/95 backdrop-blur-md border-b border-base-300 shadow-lg px-4 lg:px-8 sticky top-0 z-50 transition-all">
+
+  <div class="navbar-start">
+    <div class="dropdown">
+      <div tabindex="0" role="button" class="btn btn-ghost lg:hidden" aria-label="Open menu">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" />
+        </svg>
+      </div>
+      <ul tabindex="0" class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow-lg border border-base-200">
+        <li><a routerLink="/gender/men" routerLinkActive="text-secondary font-bold">Men</a></li>
+        <li><a routerLink="/gender/women" routerLinkActive="text-secondary font-bold">Women</a></li>
+        <li><a routerLink="/gender/kids" routerLinkActive="text-secondary font-bold">Kids</a></li>
+      </ul>
+    </div>
+
+
+    <a routerLink="/" class="btn btn-ghost text-xl font-montserrat tracking-tight uppercase">
+      Teslo <span class="text-secondary font-normal">| Shop</span>
+    </a>
+  </div>
+
+
+  <div class="navbar-center hidden lg:flex">
+    <ul class="menu menu-horizontal px-1 gap-2 font-medium">
+      <li><a routerLink="/gender/men" class="btn btn-ghost btn-sm" routerLinkActive="text-secondary bg-base-200">Men</a></li>
+      <li><a routerLink="/gender/women" class="btn btn-ghost btn-sm" routerLinkActive="text-secondary bg-base-200">Women</a></li>
+      <li><a routerLink="/gender/kids" class="btn btn-ghost btn-sm" routerLinkActive="text-secondary bg-base-200">Kids</a></li>
+    </ul>
+  </div>
+
+
+  <div class="navbar-end gap-3">
+
+
+    <div class="form-control hidden sm:block relative w-40 md:w-56">
+      <input
+        type="text"
+        placeholder="Search products..."
+        class="input input-sm input-bordered w-full pr-8 focus:outline-none focus:border-secondary"
+      />
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 absolute right-2.5 top-2.5 text-base-content/50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+      </svg>
+    </div>
+
+
+    <div class="dropdown dropdown-end">
+      <div tabindex="0" role="button" class="btn btn-ghost btn-circle" aria-label="View Cart">
+        <div class="indicator">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z" />
+          </svg>
+
+          <span class="badge badge-sm badge-secondary indicator-item">0</span>
+        </div>
+      </div>
+      <div tabindex="0" class="card card-compact dropdown-content bg-base-100 z-1 mt-3 w-52 shadow-xl border border-base-200">
+        <div class="card-body">
+          <span class="text-lg font-bold">0 Items</span>
+          <span class="text-secondary font-semibold">Subtotal: $0.00</span>
+          <div class="card-actions">
+            <a routerLink="/cart" class="btn btn-secondary btn-block btn-sm text-white">View Cart</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Admin Panel Button (Conditional) -->
+    @if(authService.authStatus() === 'authenticated' && authService.isAdmin()){
+      <a class="btn btn-primary btn-sm hidden md:flex" routerLink="/admin">Admin Panel</a>
+    }
+
+    <!-- Authentication States -->
+    @if(authService.authStatus() === 'authenticated'){
+      <!-- User Dropdown Menu -->
+      <div class="dropdown dropdown-end">
+        <div tabindex="0" role="button" class="btn btn-ghost gap-2 normal-case">
+          <div class="bg-secondary text-secondary-content rounded-full w-8 h-8 flex items-center justify-center text-xs font-bold">
+            {{ authService.user()?.fullName?.charAt(0) || 'U' }}
+          </div>
+          <span class="hidden md:inline font-medium">{{ authService.user()?.fullName }}</span>
+        </div>
+        <ul tabindex="0" class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow-lg border border-base-200">
+          @if(authService.isAdmin()){
+            <li><a routerLink="/admin" class="md:hidden">Admin Panel</a></li>
+          }
+          <li><a routerLink="/profile">Profile & Orders</a></li>
+          <div class="divider my-1"></div>
+          <li><button (click)="authService.logout()" class="text-error font-semibold">Logout</button></li>
+        </ul>
+      </div>
+    }
+    @else if (authService.authStatus() === 'not-authenticated') {
+      <a class="btn btn-secondary btn-sm text-white px-5" routerLink="/auth/login">Login</a>
+    }
+    @else {
+      <div class="skeleton h-8 w-20 rounded-btn"></div>
+    }
+
+  </div>
+</div>
