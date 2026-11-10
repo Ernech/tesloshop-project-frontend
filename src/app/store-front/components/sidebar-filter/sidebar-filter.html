@@ -1,0 +1,52 @@
+<aside class="w-full lg:w-64 bg-base-200/60 p-6 rounded-box border border-base-300 space-y-6 h-fit sticky top-24">
+  <div class="flex items-center justify-between border-b border-base-300 pb-3">
+      <h3 class="font-bold font-montserrat text-lg flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+      </svg>
+        Filters
+      </h3>
+      <button class="btn btn-ghost btn-xs text-error hover:bg-error/10">Reset all</button>
+  </div>
+
+  <div class="flex justify-between text-[10px] text-base-content/50">
+    <span>0</span>
+    <span>$200</span>
+  </div>
+  <div class="divider my-0"></div>
+
+  <div class="space-y-3">
+    <h4 class="text-xs font-bold uppercase tracking-wider text-base-content/70">Size</h4>
+    <div class="flex felx-wrap gap-2">
+      @for (size of ['XS', 'S', 'M', 'L', 'XL']; track size) {
+        <label class="cursor-pointer">
+          <input type="checkbox" class="peer hidden" />
+          <span class="btn btn-sm btn-outline border-base-300 peer-checked:btn-secondary peer-checked:text-white w-10 h-10 p-0 flex items-center justify-center rounded-lg text-xs font-bold transition-all">
+            {{ size }}
+          </span>
+        </label>
+      }
+    </div>
+  </div>
+  <div class="divider my-0"></div>
+  <div class="space-y-2">
+    <h4 class="text-xs font-bold font-montserrat uppercase tracking-wider text-base-content/70">Category</h4>
+    <div class="flex flex-col items-start space-y-1 text-sm">
+      <label class="label cursor-pointer justify-start gap-3 py-1">
+        <input type="checkbox" class="checkbox checkbox-secondary checkbox-sm rounded" />
+        <span class="label-text text-base-content/80">Shirts & T-Shirts</span>
+      </label>
+      <label class="label cursor-pointer justify-start gap-3 py-1">
+        <input type="checkbox" class="checkbox checkbox-secondary checkbox-sm rounded" />
+        <span class="label-text text-base-content/80">Hoodies</span>
+      </label>
+      <label class="label cursor-pointer justify-start gap-3 py-1">
+        <input type="checkbox" class="checkbox checkbox-secondary checkbox-sm rounded" />
+        <span class="label-text text-base-content/80">Pants</span>
+      </label>
+    </div>
+  </div>
+  <button class="btn btn-secondary btn-block text-white font-medium shadow-md">
+    Apply Filters
+  </button>
+</aside>

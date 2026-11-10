@@ -1,18 +1,26 @@
 <div class="px-5">
-
   <split-hero-component></split-hero-component>
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-2 gap-3 px-12">
-    @for (product of productResource.value()?.products; track $index) {
-      <product-card [product]="product"/>
 
-    }
-    @empty {
-      <p>No hay productos</p>
-    }
+  <div class="flex flex-col md:flex-row gap-6 items-start">
+    <div class="w-full md:w-64 shrink-0">
+      <sidebar-filter-component></sidebar-filter-component>
+    </div>
+    <div class="flex-1 w-full space-y-6">
 
-  </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-2 gap-3 px-12">
+          @for (product of productResource.value()?.products; track $index) {
+            <product-card [product]="product"/>
 
-  <app-pagination [pages]="productResource.value()?.pages ?? 0" [currentPage]="paginationService.currentPage()"/>
+          }
+          @empty {
+            <p>No hay productos</p>
+          }
+
+        </div>
+
+        <app-pagination [pages]="productResource.value()?.pages ?? 0" [currentPage]="paginationService.currentPage()"/>
+      </div>
+    </div>
 
 </div>
 

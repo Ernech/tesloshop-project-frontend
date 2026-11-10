@@ -3,7 +3,18 @@
 @plugin "daisyui" {
    themes: light --default, dark --prefersdark, night;
 }
+@font-face {
+  font-family: "Montserrat";
+  src: url("/assets/fonts/montserrat/Montserrat-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
 
+/* 2. Registra la fuente dentro del tema de Tailwind v4 */
+@theme {
+  --font-montserrat: "Montserrat", sans-serif;
+}
 @layer base{
   @font-face {
     font-family: "Montserrat";
