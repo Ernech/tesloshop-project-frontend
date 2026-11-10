@@ -4,11 +4,12 @@ import { ProductsService } from '@products/services/products.service';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { PaginationComponent } from "@shared/components/pagination/pagination.component";
 import { PaginationService } from '@shared/components/pagination/pagination.service';
+import { SplitHero } from '@store-front/components/split-hero/split-hero';
 
 
 @Component({
   selector: 'app-home-page',
-  imports: [ProductCardComponent, PaginationComponent],
+  imports: [ProductCardComponent, PaginationComponent, SplitHero],
   templateUrl: './home-page.component.html',
 })
 export class HomePageComponent {
