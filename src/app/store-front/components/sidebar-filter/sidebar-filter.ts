@@ -1,8 +1,22 @@
 import { UpperCasePipe } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { ValidCategory, ValidGender, ValidSize } from '@products/interfaces/filters.interface';
 import { startWith } from 'rxjs';
+
+export const priceRangeValidator:ValidatorFn = (group: AbstractControl): ValidationErrors | null => {
+  const min = group.get('minPrice')?.value;
+  const max = group.get('maxPrice')?.value;
+
+  // Si ambos tienen valor y el mínimo es mayor al máximo (o viceversa)
+  if (min !== null && max !== null && min > max) {
+    return { invalidPriceRange: true };
+  }
+
+  return null;
+};
+
 
 @Component({
   selector: 'sidebar-filter-component',
@@ -11,15 +25,16 @@ import { startWith } from 'rxjs';
 })
 export class SidebarFilter {
 
-  genders =['men','women','kid','unisex']
-  tags = ['Shirt', 'Hoodie', 'Sweatshirt','Hats','Jacket'];
+  genders:ValidGender[] =['men','women','kid','unisex']
+  tags:ValidCategory[] = ['shirt', 'hoodie', 'sweatshirt','hats','jacket'];
 
-  sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+  sizes:ValidSize[] = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
 
 
+  readonly MAX_CATALOG_PRICE = 500;
 
   minPriceLimit = signal(0);
-  maxPriceLimit = signal(500);
+  maxPriceLimit = signal(this.MAX_CATALOG_PRICE);
 
 
 
@@ -27,10 +42,13 @@ export class SidebarFilter {
 
   myFilterForm = this.fb.nonNullable.group({
     selectedGender: [''],
-    minPrice:[0],
-    maxPrice:[250],
+    minPrice: [0, [Validators.required, Validators.min(0), Validators.max(this.MAX_CATALOG_PRICE)]],
+      maxPrice: [this.MAX_CATALOG_PRICE, [Validators.required, Validators.min(0), Validators.max(this.MAX_CATALOG_PRICE)]],
     sizes:this.fb.array<string>([]),
     categories:this.fb.array<string>([])
+  },
+  {
+    validators:priceRangeValidator
   })
 
    selectedMinPrice = toSignal(
