@@ -1,115 +1,122 @@
 <aside class="w-full lg:w-70 bg-base-200/60 p-5 rounded-box border border-base-300 space-y-6 h-fit sticky top-24">
-  <div class="flex items-center justify-between border-b border-base-300">
-    <h3 class="font-bold font-montserrat text-lg flex items-center gap-2">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-secondary" fill="none" viewBox="0 0 24 24"
-        stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
-      </svg>
-      Filters
-    </h3>
-    <button class="btn btn-ghost btn-xs text-error hover:bg-error/10">Reset all</button>
-  </div>
-  <!--Filter by gender-->
-  <div class="collapse collapse-arrow bg-base-50 rounded-lg border border-base-200">
-    <input type="checkbox" checked />
-    <div class="collapse-title font-medium text-sm"><span class="font-montserrat">GENDER</span></div>
-    <div class="collapse-content space-y-2">
-      @for (gender of genders; track $index) {
-      <div class="form-control">
-        <label class="label cursor-pointer justify-start gap-3 py-1">
-          <input type="radio" class="radio radio-secondary" name="gender" [value]="gender"
-            class="radio radio-primary radio-sm" />
-          <span class="label-text capitalize">{{ gender }}</span>
-        </label>
-      </div>
-      }
-      <div class="divider"></div>
+  <form autocomplete="off" [formGroup]="myFilterForm" (submit)="onFilterFormSubmit()">
+
+    <div class="flex items-center justify-between border-b border-base-300">
+      <h3 class="font-bold font-montserrat text-lg flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-secondary" fill="none" viewBox="0 0 24 24"
+          stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+        </svg>
+        Filters
+      </h3>
+      <button class="btn btn-ghost btn-xs text-error hover:bg-error/10">Reset all</button>
     </div>
-  </div>
-
-  <!--Range Price-->
-  <div class="collapse collapse-arrow bg-base-50 rounded-lg border border-base-200">
-    <input type="checkbox" checked />
-    <div class="collapse-title font-medium text-sm"><span class="font-montserrat">PRICE RANGE</span></div>
-    <div class="collapse-content space-y-2">
-      <div class="flex items-center gap-2 pt-1">
-        <label class="input input-bordered input-sm flex items-center gap-1 w-full">
-          <span class="text-base-content/50 text-xs">$</span>
-          <input type="number" max="0" class="input input-secondary" />
+    <!--Filter by gender-->
+    <div class="collapse collapse-arrow bg-base-50 rounded-lg border border-base-200">
+      <input type="checkbox" checked />
+      <div class="collapse-title font-medium text-sm"><span class="font-montserrat">GENDER</span></div>
+      <div class="collapse-content space-y-2">
+        @for (gender of genders; track gender) {
+        <label class="flex items-center gap-3 cursor-pointer py-1 select-none">
+          <input type="radio" [value]="gender" formControlName="selectedGender"
+            class="radio radio-primary radio-sm shrink-0" />
+          <span class="text-sm text-base-content capitalize">{{ gender }}</span>
         </label>
-
-        <span class="text-base-content/40">-</span>
-
-        <label class="input input-bordered input-sm flex items-center gap-1 w-full">
-          <span class="text-base-content/50 text-xs">$</span>
-          <input type="number" max="9000" class="input input-secondary" />
-        </label>
+        }
+        <div class="divider"></div>
       </div>
-      <div class="space-y-1">
-        <input type="range" [min]="selectedMinPrice()" [max]="maxPrice()" [value]="selectedMaxPrice()"
-          class="range range-primary range-xs" />
-        <div class="flex justify-between text-xs text-base-content/70 px-1">
-          <span>${{ selectedMinPrice() }}</span>
-          <span class="font-semibold text-primary">Until ${{ selectedMaxPrice() }}</span>
+    </div>
+
+    <!--Range Price-->
+    <div class="collapse collapse-arrow bg-base-50 rounded-lg border border-base-200">
+      <input type="checkbox" checked />
+      <div class="collapse-title font-medium text-sm"><span class="font-montserrat">PRICE RANGE</span></div>
+      <div class="collapse-content space-y-2">
+        <div class="flex items-center gap-2 pt-1">
+          <label class="input input-bordered input-sm flex items-center gap-1 w-full">
+            <span class="text-base-content/50 text-xs">$</span>
+            <input type="number" [min]="minPriceLimit()" [max]="selectedMaxPrice()" class="input input-secondary"
+              formControlName="minPrice" />
+          </label>
+
+          <span class="text-base-content/40">-</span>
+
+          <label class="input input-bordered input-secondary input-sm flex items-center gap-1 w-full">
+            <span class="text-base-content/50 text-xs">$</span>
+            <input type="number" formControlName="maxPrice" [min]="selectedMinPrice() + 1" max="9000"
+              class="w-full bg-transparent focus:outline-none" />
+          </label>
         </div>
-      </div>
-      <div class="flex flex-wrap gap-1.5">
-        <button type="button" class="btn btn-xs btn-outline border-base-300 font-normal">
-          Hasta $50
-        </button>
-        <button type="button" class="btn btn-xs btn-outline border-base-300 font-normal">
-          $50 - $150
-        </button>
-        <button type="button" class="btn btn-xs btn-outline border-base-300 font-normal">
-          More Than $150
-        </button>
-      </div>
-      <div class="divider"></div>
-    </div>
-  </div>
-
- <!--Size Picker-->
-   <div class="collapse collapse-arrow bg-base-50 rounded-lg border border-base-200">
-  <input type="checkbox" checked />
-  <div class="collapse-title font-medium text-sm"><span class="font-montserrat">PRICE RANGE</span></div>
-    <div class="collapse-content space-y-2">
-          <div class="flex felx-wrap gap-2">
-            @for (size of ['XS', 'S', 'M', 'L', 'XL']; track size) {
-            <label class="cursor-pointer">
-              <input type="checkbox" class="peer hidden" />
-              <span
-                class="btn btn-sm btn-outline btn-secondary peer-checked:btn-active peer-checked:text-white w-10 h-10 p-0 flex items-center justify-center rounded-lg text-xs font-bold transition-all">
-                {{ size }}
-              </span>
-            </label>
-            }
+        <div class="space-y-1">
+          <input type="range" formControlName="maxPrice" [min]="selectedMinPrice()" [max]="maxPriceLimit()"
+            class="range range-primary range-xs" />
+          <div class="flex justify-between text-xs text-base-content/70 px-1">
+            <span>${{ selectedMinPrice() }}</span>
+            <span class="font-semibold text-primary">Until ${{ selectedMaxPrice() }}</span>
           </div>
-          <div class="divider"></div>
-    </div>
+        </div>
+        <div class="flex flex-wrap gap-1.5">
+          <button type="button" class="btn btn-secondary btn-xs btn-outline border-base-300 font-normal"
+            [class.btn-active]="selectedMinPrice()===0 && selectedMaxPrice()===50"
+            (click)="onChangeMinAndMaxPriceButton(0,50)">
+            Until $50
+          </button>
+          <button type="button" class="btn btn-secondary btn-xs btn-outline border-base-300 font-normal"
+            [class.btn-active]="selectedMinPrice()===50 && selectedMaxPrice()===150"
+            (click)="onChangeMinAndMaxPriceButton(50,150)">
+            $50 - $150
+          </button>
+          <button type="button" class="btn btn-secondary btn-xs btn-outline border-base-300 font-normal"
+            [class.btn-active]="selectedMinPrice()===250 && selectedMaxPrice()===maxPriceLimit()"
+            (click)="onChangeMinAndMaxPriceButton(150,maxPriceLimit())">
+            More Than $150
+          </button>
+        </div>
+        <div class="divider"></div>
+      </div>
     </div>
 
-  <div class="collapse collapse-arrow bg-base-50 rounded-lg border border-base-200">
-     <input type="checkbox" checked />
-    <div class="collapse-title font-medium text-sm"><span class="font-montserrat">CATEGORIES</span></div>
-     <div class="collapse-content space-y-2">
+    <!--Size Picker-->
+    <div class="collapse collapse-arrow bg-base-50 rounded-lg border border-base-200">
+      <input type="checkbox" checked />
+      <div class="collapse-title font-medium text-sm"><span class="font-montserrat">SIZES</span></div>
+      <div class="w-full collapse-content space-y-2">
+        <div class="grid grid-cols-3 gap-2">
+          @for (size of sizes; track size) {
+          <label class="cursor-pointer">
+            <input type="checkbox" class="peer hidden" (click)="toggleSize(size)" />
+            <span
+              [class.btn-active] = "isSizeIncluded(size)"
+              [class.btn-outline]= "!isSizeIncluded(size)"
+              class="btn btn-sm btn-secondary w-10 h-10 p-0 flex items-center justify-center rounded-lg text-xs font-bold transition-all">
+              {{ size | uppercase}}
+            </span>
+          </label>
+          }
+        </div>
+        <div class="divider"></div>
+      </div>
+    </div>
+
+    <div class="collapse collapse-arrow bg-base-50 rounded-lg border border-base-200">
+      <input type="checkbox" checked />
+      <div class="collapse-title font-medium text-sm"><span class="font-montserrat">CATEGORIES</span></div>
+      <div class="collapse-content space-y-2">
         <div class="flex flex-col items-start space-y-1 text-sm">
+          @for (tag of tags; track $index) {
           <label class="label cursor-pointer justify-start gap-3 py-1">
-            <input type="checkbox" class="checkbox checkbox-secondary checkbox-sm rounded" />
-            <span class="label-text text-base-content/80">Shirts & T-Shirts</span>
+            <input type="checkbox" class="checkbox checkbox-secondary checkbox-sm rounded" (click)="toggleCategory(tag)" />
+            <span class="label-text text-base-content/80">{{ tag | uppercase}}</span>
           </label>
-          <label class="label cursor-pointer justify-start gap-3 py-1">
-            <input type="checkbox" class="checkbox checkbox-secondary checkbox-sm rounded" />
-            <span class="label-text text-base-content/80">Hoodies</span>
-          </label>
-          <label class="label cursor-pointer justify-start gap-3 py-1">
-            <input type="checkbox" class="checkbox checkbox-secondary checkbox-sm rounded" />
-            <span class="label-text text-base-content/80">Pants</span>
-          </label>
+          }
+
         </div>
       </div>
-     </div>
-  <button class="btn btn-secondary btn-block text-white font-medium shadow-md">
-    Apply Filters
-  </button>
+    </div>
+    <div class="divider"></div>
+    <button type="submit" class="btn btn-secondary btn-block text-white font-medium shadow-md">
+      Apply Filters
+    </button>
+  </form>
 </aside>
