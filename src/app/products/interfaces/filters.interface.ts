@@ -9,3 +9,8 @@ export interface FiltersProducts{
   sizes: ValidSize[];
   categories: ValidCategory[];
 }
+
+export interface ProductQueryOptions extends Partial<FiltersProducts> {
+  limit?: number;
+  page?: number;
+}

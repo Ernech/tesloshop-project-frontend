@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { User } from '@auth/interfaces/user.interface';
+import { ProductQueryOptions } from '@products/interfaces/filters.interface';
 import { Gender, Product, ProductsResponse } from '@products/interfaces/product.interface';
 import { Observable, of, tap, map, forkJoin, switchMap } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -56,21 +57,27 @@ export class ProductsService {
 
   }
 
-  getProducts(options:Options):Observable<ProductsResponse>{
-    const {limit=12,page=0,gender=''} = options;
-
-    const key = `${limit}-${page}-${gender}`;
+  getProducts(filters:ProductQueryOptions):Observable<ProductsResponse>{
+    const {limit=12,page=0, gender,categories,maxPrice,minPrice,sizes} = filters;
+    const sizesKey = sizes?.length ? [...sizes].sort().join(',') :'';
+    const categoriesKey = categories?.length? [...categories].sort().join(','):''
+    const key = `${limit}-${page}-${gender ?? ''}-${minPrice ?? ''}-${maxPrice ?? ''}-${sizesKey}-${categoriesKey}`;
 
     if(this.productsCache.has(key)){
       return of(this.productsCache.get(key)!);
     }
 
+    const params:Record<string,string | number> = {
+      limit,
+      page
+    }
+    if (gender) params['gender'] = gender;
+    if (minPrice !== undefined) params['minPrice'] = minPrice;
+    if (maxPrice !== undefined) params['maxPrice'] = maxPrice;
+    if (sizesKey) params['sizes'] = sizesKey;
+    if (categoriesKey) params['categories'] = categoriesKey;
     return this.http.get<ProductsResponse>(`${baseUrl}/products`,{
-      params:{
-        limit,
-        page,
-        gender
-      }
+      params
     }).pipe(
       tap((resp)=>console.log(resp)),
       tap((resp)=>this.productsCache.set(key,resp))
