@@ -6,6 +6,7 @@ import { ProductsService } from '@products/services/products.service';
 import { PaginationService } from '@shared/components/pagination/pagination.service';
 import { map } from 'rxjs';
 import { PaginationComponent } from "@shared/components/pagination/pagination.component";
+import { ValidGender } from '@products/interfaces/filters.interface';
 
 @Component({
   selector: 'app-gender-page',
@@ -16,7 +17,7 @@ export class GenderPageComponent {
 
   route = inject(ActivatedRoute);
 
-  gender:Signal<string> = toSignal(
+  gender:Signal<ValidGender> = toSignal(
     this.route.params.pipe(map(({gender})=>gender))
   );
   private productsService = inject(ProductsService);

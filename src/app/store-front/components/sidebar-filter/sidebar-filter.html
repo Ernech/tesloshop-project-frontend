@@ -10,7 +10,7 @@
         </svg>
         Filters
       </h3>
-      <button class="btn btn-ghost btn-xs text-error hover:bg-error/10">Reset all</button>
+      <button class="btn btn-ghost btn-xs text-error hover:bg-error/10" (click)="onResetFlters()">Reset all</button>
     </div>
     <!--Filter by gender-->
     <div class="collapse collapse-arrow bg-base-50 rounded-lg border border-base-200">
@@ -104,12 +104,16 @@
       <div class="collapse-title font-medium text-sm"><span class="font-montserrat">CATEGORIES</span></div>
       <div class="collapse-content space-y-2">
         <div class="flex flex-col items-start space-y-1 text-sm">
-          @for (tag of tags; track $index) {
-          <label class="label cursor-pointer justify-start gap-3 py-1">
-            <input type="checkbox" class="checkbox checkbox-secondary checkbox-sm rounded" (click)="toggleCategory(tag)" />
-            <span class="label-text text-base-content/80">{{ tag | uppercase}}</span>
+        @for (tag of tags; track tag) {
+          <label class="flex items-center cursor-pointer gap-3 py-1 select-none">
+            <input
+              type="checkbox"
+              class="checkbox checkbox-secondary checkbox-sm rounded shrink-0"
+              [checked]="isCategoryIncluded(tag)"
+              (change)="toggleCategory(tag)" />
+            <span class="text-sm text-base-content/80">{{ tag | uppercase }}</span>
           </label>
-          }
+        }
 
         </div>
       </div>

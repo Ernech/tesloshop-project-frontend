@@ -1,9 +1,9 @@
 import { UpperCasePipe } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, output, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { FiltersProducts, ProductQueryOptions, ValidCategory, ValidGender, ValidSize } from '@products/interfaces/filters.interface';
-import { ProductsService } from '@products/services/products.service';
+import { ProductQueryOptions, ValidCategory, ValidGender, ValidSize } from '@products/interfaces/filters.interface';
+
 import { startWith } from 'rxjs';
 
 export const priceRangeValidator:ValidatorFn = (group: AbstractControl): ValidationErrors | null => {
@@ -26,7 +26,6 @@ export const priceRangeValidator:ValidatorFn = (group: AbstractControl): Validat
 })
 export class SidebarFilter {
 
-  private readonly productsServices = inject(ProductsService);
   genders:ValidGender[] =['men','women','kid','unisex']
   tags:ValidCategory[] = ['shirt', 'hoodie', 'sweatshirt','hats','jacket'];
 
@@ -38,7 +37,7 @@ export class SidebarFilter {
   minPriceLimit = signal(0);
   maxPriceLimit = signal(this.MAX_CATALOG_PRICE);
 
-
+  filterParams = output<ProductQueryOptions>();
 
   private fb = inject(FormBuilder);
 
@@ -120,13 +119,24 @@ export class SidebarFilter {
      if(rawValues.sizes && rawValues.sizes.length>0){
       filterParams.sizes = rawValues.sizes;
     }
+
+    this.filterParams.emit(filterParams)
+  }
+
+  onResetFlters(){
+    this.myFilterForm.controls.sizes.clear();
+    this.myFilterForm.controls.categories.clear();
+    this.categoriesArray.clear();
+    this.sizesArray.clear();
+    this.myFilterForm.reset();
+    this.filterParams.emit({});
   }
 
   isSizeIncluded(size:ValidSize):boolean{
     return this.sizesArray.value.includes(size);
   }
 
-  isCategoryIncluded(category:ValidCategory){
+  isCategoryIncluded(category:ValidCategory):boolean{
     return this.categoriesArray.value.includes(category);
   }
 }
