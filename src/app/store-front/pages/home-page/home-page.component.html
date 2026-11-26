@@ -3,7 +3,7 @@
 
   <div class="flex flex-col md:flex-row gap-6 items-start">
     <div class="w-full md:w-64 shrink-0">
-      <sidebar-filter-component (filterParams)="activeFilters.set($event)"></sidebar-filter-component>
+      <sidebar-filter-component (filterParams)="onFiltersChanged($event)" [initialFilters]="activeFilters()"></sidebar-filter-component>
     </div>
     <div class="flex-1 w-full space-y-6">
 

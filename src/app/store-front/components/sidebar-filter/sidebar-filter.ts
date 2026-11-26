@@ -1,5 +1,5 @@
 import { UpperCasePipe } from '@angular/common';
-import { Component, inject, output, signal } from '@angular/core';
+import { Component, effect, inject, input, linkedSignal, output, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { ProductQueryOptions, ValidCategory, ValidGender, ValidSize } from '@products/interfaces/filters.interface';
@@ -39,6 +39,8 @@ export class SidebarFilter {
 
   filterParams = output<ProductQueryOptions>();
 
+  initialFilters = input<ProductQueryOptions>({})
+
   private fb = inject(FormBuilder);
 
   myFilterForm = this.fb.nonNullable.group({
@@ -51,6 +53,27 @@ export class SidebarFilter {
   {
     validators:priceRangeValidator
   })
+
+    markFiltersEffect  = effect(()=>{
+
+    const filters = this.initialFilters();
+
+    this.myFilterForm.patchValue({
+        selectedGender: filters.gender ?? '',
+        minPrice: filters.minPrice ?? 0,
+        maxPrice: filters.maxPrice ?? this.MAX_CATALOG_PRICE,
+      });
+
+       this.myFilterForm.controls.sizes.clear();
+      filters.sizes?.forEach((size) => {
+        this.myFilterForm.controls.sizes.push(this.fb.nonNullable.control(size));
+      });
+       this.myFilterForm.controls.categories.clear();
+      filters.categories?.forEach((cat) => {
+        this.myFilterForm.controls.categories.push(this.fb.nonNullable.control(cat));
+      });
+
+  });
 
    selectedMinPrice = toSignal(
     this.myFilterForm.controls.minPrice.valueChanges.pipe(
@@ -126,8 +149,6 @@ export class SidebarFilter {
   onResetFlters(){
     this.myFilterForm.controls.sizes.clear();
     this.myFilterForm.controls.categories.clear();
-    this.categoriesArray.clear();
-    this.sizesArray.clear();
     this.myFilterForm.reset();
     this.filterParams.emit({});
   }
